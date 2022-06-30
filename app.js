@@ -1,14 +1,32 @@
 const form = document.forms[0];
-const selectEl = document.getElementById('dog-select');
 
 fetch('https://dog.ceo/api/breeds/list/all')
   .then(res => res.json())
   .then(dogBreeds => {
+    const selectEl = document.getElementById('dog-select');
+
     for (key in dogBreeds.message) {
       const optionEl = document.createElement('option');
+      const optionGroupEl = document.createElement('optgroup');
+      const subBreeds = dogBreeds.message[`${key}`];
+
+      if (subBreeds.length > 0) {
+        optionGroupEl.label = key;
+        optionGroupEl.value = key;
+
+        subBreeds.forEach(subBreed => {
+          const optionEl = document.createElement('option');
+          optionEl.textContent = subBreed;
+          optionEl.value = key + '/' + subBreed;
+          optionGroupEl.append(optionEl);
+        });
+      }
+
       optionEl.textContent = key;
       optionEl.value = key;
-      selectEl.append(optionEl);
+      optionGroupEl.value
+        ? selectEl.append(optionGroupEl)
+        : selectEl.append(optionEl);
     }
   });
 
